@@ -4,7 +4,6 @@ import { initReactI18next } from 'react-i18next';
 const resources = {
     en: {
         translation: {
-            welcome: 'Welcome to 2 Goats 1 Car!',
             numberOfDoors: 'Number of Doors',
             playerBehavior: 'Player Behavior',
             switchDoors: 'Switch Doors',
@@ -31,7 +30,6 @@ const resources = {
     },
     de: {
         translation: {
-            welcome: 'Willkommen bei 2 Ziegen 1 Auto!',
             numberOfDoors: 'Anzahl der Türen',
             playerBehavior: 'Spielerverhalten',
             switchDoors: 'Wechseln',
@@ -46,9 +44,9 @@ const resources = {
             abortedGamesDescription: 'Spiele, bei denen der Gastgeber versehentlich das Auto zeigte',
             gamesFinished: 'Abgeschlossene Spiele',
             gamesFinishedDescription: 'Spiele, die bis zu dem Punkt gespielt wurden, an dem der Spieler seine Wahl getroffen hat',
-            wins: 'Gewinne',
+            wins: 'Gewonnene Spiele',
             winsDescription: 'Anzahl der gewonnenen Spiele',
-            losses: 'Verluste',
+            losses: 'Verlorene Spiele',
             lossesDescription: 'Anzahl der verlorenen Spiele',
             winRate: 'Gewinnrate',
             winRateDescription: 'Prozentsatz der gewonnenen Spiele',

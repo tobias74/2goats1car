@@ -102,23 +102,23 @@ const Home = () => {
             </li>
             <li>
               <strong>{t('abortedGames')}:</strong> {results ? results.hostAbortedGames : '---'}{' '}
-              <span className="text-sm text-gray-600">{t('abortedGamesDescription')}</span>
+              <span className="text-sm text-gray-600">({t('abortedGamesDescription')})</span>
             </li>
             <li className="pt-4">
               <strong>{t('gamesFinished')}:</strong> {results ? totalPlayedGames : '---'}{' '}
-              <span className="text-sm text-gray-600">{t('gamesFinishedDescription')}</span>
+              <span className="text-sm text-gray-600">({t('gamesFinishedDescription')})</span>
             </li>
             <li>
               <strong>{t('wins')}:</strong> {results ? results.wins : '---'}{' '}
-              <span className="text-sm text-gray-600">{t('winsDescription')}</span>
+              <span className="text-sm text-gray-600">({t('winsDescription')})</span>
             </li>
             <li>
               <strong>{t('losses')}:</strong> {results ? results.losses : '---'}{' '}
-              <span className="text-sm text-gray-600">{t('lossesDescription')}</span>
+              <span className="text-sm text-gray-600">({t('lossesDescription')})</span>
             </li>
             <li>
               <strong>{t('winRate')}:</strong> {winRate}{' '}
-              <span className="text-sm text-gray-600">{t('winRateDescription')}</span>
+              <span className="text-sm text-gray-600">({t('winRateDescription')})</span>
             </li>
           </ul>
         </section>
