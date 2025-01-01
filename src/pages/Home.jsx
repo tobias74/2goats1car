@@ -1,6 +1,6 @@
 import React, { useState } from 'react';
 import { useTranslation } from 'react-i18next';
-import { runMontyHallSimulation } from '../services/simulation';
+import WorkerManager from '../utils/WorkerManager';
 
 const Home = () => {
   const { t } = useTranslation();
@@ -10,15 +10,45 @@ const Home = () => {
   const [hostKnowledge, setHostKnowledge] = useState('knows');
   const [simulations, setSimulations] = useState(100);
   const [results, setResults] = useState(null);
+  const [progress, setProgress] = useState(0);
+  const [isRunning, setIsRunning] = useState(false);
+
+  let workerManager = null;
 
   const handleRunSimulation = () => {
-    const { wins, losses, hostAbortedGames, totalSimulations } = runMontyHallSimulation(
+    setIsRunning(true);
+    setProgress(0);
+    setResults(null);
+
+    // Initialize the worker manager
+    workerManager = new WorkerManager(new URL('../workers/simulationWorker.js', import.meta.url));
+
+    // Listen for progress updates
+    workerManager.on('progress', (data) => {
+      setProgress(data.progress);
+    });
+
+    // Listen for the final result
+    workerManager.on('complete', (data) => {
+      setResults(data);
+      setIsRunning(false);
+      workerManager.terminate();
+    });
+
+    // Listen for errors
+    workerManager.on('error', (error) => {
+      console.error('Worker Error:', error);
+      setIsRunning(false);
+      workerManager.terminate();
+    });
+
+    // Start the simulation
+    workerManager.postMessage({
       doors,
       playerBehavior,
       hostKnowledge,
-      simulations
-    );
-    setResults({ wins, losses, hostAbortedGames, totalSimulations });
+      simulations,
+    });
   };
 
   const totalPlayedGames = results ? results.totalSimulations - results.hostAbortedGames : 0;
@@ -76,7 +106,7 @@ const Home = () => {
                 onChange={(e) => setSimulations(Number(e.target.value))}
                 className="w-full p-2 border rounded"
               >
-                {[100, 500, 1000, 5000, 10000].map((n) => (
+                {[100, 500, 1000, 5000, 10000, 100000, 1000000].map((n) => (
                   <option key={n} value={n}>
                     {n}
                   </option>
@@ -87,9 +117,10 @@ const Home = () => {
           <div className="flex justify-center mt-4">
             <button
               onClick={handleRunSimulation}
+              disabled={isRunning}
               className="bg-teal-600 text-white px-6 py-3 rounded shadow hover:bg-teal-700 transition"
             >
-              {t('runSimulation')}
+              {isRunning ? `${t('runningSimulation')} (${progress.toFixed(0)}%)` : t('runSimulation')}
             </button>
           </div>
         </section>
