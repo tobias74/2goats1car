@@ -1,4 +1,4 @@
-import React, { useState, useRef } from 'react';
+import React, { useState, useRef, useEffect } from 'react';
 import { useTranslation } from 'react-i18next';
 import WorkerManager from '../utils/WorkerManager';
 import ResultsSection from '../components/ResultsSection';
@@ -67,6 +67,16 @@ const Home = () => {
       setIsRunning(false);
     }
   };
+
+  // Cleanup on component unmount
+  useEffect(() => {
+    return () => {
+      if (workerManagerRef.current) {
+        workerManagerRef.current.terminate();
+        workerManagerRef.current = null;
+      }
+    };
+  }, []);
 
   return (
     <div className={'p-6 ' + styles['home-wrapper']}>
