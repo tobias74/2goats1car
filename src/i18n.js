@@ -28,6 +28,10 @@ const resources = {
             imprint: 'Imprint',
             privacy: 'Privacy Policy',
             abortSimulation: 'Click to abort',
+            lastRun: 'Last Run',
+            switch: 'Switch',
+            knows: 'Knows',
+            random: 'Does not know',
         },
     },
     de: {
@@ -56,6 +60,10 @@ const resources = {
             imprint: 'Impressum',
             privacy: 'Datenschutzerklärung',
             abortSimulation: 'Zum Abbrechen klicken',
+            lastRun: 'Letzte Simulation',
+            switch: 'Wechseln',
+            knows: 'Weiß Bescheid',
+            random: 'Weiß nicht Bescheid',
         },
     },
 };

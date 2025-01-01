@@ -19,13 +19,17 @@ const Home = () => {
   });
   const [progress, setProgress] = useState(0);
   const [isRunning, setIsRunning] = useState(false);
+  const [lastRunParameters, setLastRunParameters] = useState(null); // To track last used parameters
 
-  const workerManagerRef = useRef(null); // Persist the worker instance across re-renders
+  const workerManagerRef = useRef(null);
 
   const handleRunSimulation = () => {
     setIsRunning(true);
     setProgress(0);
     setResults({ wins: 0, losses: 0, hostAbortedGames: 0, totalSimulations: simulations });
+
+    // Store the last run parameters
+    setLastRunParameters({ doors, playerBehavior, hostKnowledge, simulations });
 
     workerManagerRef.current = new WorkerManager(
       new URL('../workers/simulationWorker.js', import.meta.url)
@@ -42,14 +46,14 @@ const Home = () => {
     workerManagerRef.current.on('complete', () => {
       setIsRunning(false);
       workerManagerRef.current.terminate();
-      workerManagerRef.current = null; // Clear the reference after completion
+      workerManagerRef.current = null;
     });
 
     workerManagerRef.current.on('error', (error) => {
       console.error('Worker Error:', error);
       setIsRunning(false);
       workerManagerRef.current.terminate();
-      workerManagerRef.current = null; // Clear the reference on error
+      workerManagerRef.current = null;
     });
 
     workerManagerRef.current.postMessage({
@@ -63,12 +67,11 @@ const Home = () => {
   const handleAbortSimulation = () => {
     if (workerManagerRef.current) {
       workerManagerRef.current.terminate();
-      workerManagerRef.current = null; // Clear the reference after termination
+      workerManagerRef.current = null;
       setIsRunning(false);
     }
   };
 
-  // Cleanup on component unmount
   useEffect(() => {
     return () => {
       if (workerManagerRef.current) {
@@ -95,7 +98,7 @@ const Home = () => {
                 className="w-full p-2 border rounded"
                 disabled={isRunning}
               >
-                {[3, 4, 5, 6, 7, 8, 9, 10, 20, 30, 40, 50, 100, 1000].map((n) => (
+                {[3, 4, 5, 6, 7, 8, 9, 10, 20, 30, 40, 50, 100].map((n) => (
                   <option key={n} value={n}>
                     {n}
                   </option>
@@ -134,7 +137,7 @@ const Home = () => {
                 className="w-full p-2 border rounded"
                 disabled={isRunning}
               >
-                {[100, 500, 1000, 5000, 10000, 100000, 1000000].map((n) => (
+                {[100, 500, 1000, 5000, 10000, 100000, 1000000, 10000000].map((n) => (
                   <option key={n} value={n}>
                     {n}
                   </option>
@@ -162,7 +165,8 @@ const Home = () => {
         </section>
 
         {/* Results Section */}
-        <ResultsSection results={results} progress={progress} isRunning={isRunning} />
+        <ResultsSection results={results} progress={progress} isRunning={isRunning} lastRunParameters={lastRunParameters} />
+
       </div>
     </div>
   );
