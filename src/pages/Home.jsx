@@ -1,6 +1,7 @@
 import React, { useState } from 'react';
 import { useTranslation } from 'react-i18next';
 import WorkerManager from '../utils/WorkerManager';
+import ResultsSection from '../components/ResultsSection';
 
 const Home = () => {
   const { t } = useTranslation();
@@ -20,29 +21,24 @@ const Home = () => {
     setProgress(0);
     setResults(null);
 
-    // Initialize the worker manager
     workerManager = new WorkerManager(new URL('../workers/simulationWorker.js', import.meta.url));
 
-    // Listen for progress updates
     workerManager.on('progress', (data) => {
       setProgress(data.progress);
     });
 
-    // Listen for the final result
     workerManager.on('complete', (data) => {
       setResults(data);
       setIsRunning(false);
       workerManager.terminate();
     });
 
-    // Listen for errors
     workerManager.on('error', (error) => {
       console.error('Worker Error:', error);
       setIsRunning(false);
       workerManager.terminate();
     });
 
-    // Start the simulation
     workerManager.postMessage({
       doors,
       playerBehavior,
@@ -51,23 +47,15 @@ const Home = () => {
     });
   };
 
-  const totalPlayedGames = results ? results.totalSimulations - results.hostAbortedGames : 0;
-  const winRate =
-    results && results.wins + results.losses > 0
-      ? ((results.wins / (results.wins + results.losses)) * 100).toFixed(2)
-      : '---';
-
   return (
     <div className="p-6">
       <div className="max-w-screen-lg mx-auto">
-        {/* Intro Section */}
         <section className="mb-14">
-          <p className=" text-gray-700">
+          <p className="text-gray-700">
             {t('introText')}
           </p>
         </section>
 
-        {/* Configuration Section */}
         <section className="mb-8">
           <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4">
             <div>
@@ -133,33 +121,7 @@ const Home = () => {
         </section>
 
         {/* Results Section */}
-        <section className="flex justify-center mt-4">
-          <ul className="space-y-2">
-            <li>
-              <strong>{t('totalSimulations')}:</strong> {results ? results.totalSimulations : '---'}
-            </li>
-            <li>
-              <strong>{t('abortedGames')}:</strong> {results ? results.hostAbortedGames : '---'}{' '}
-              <span className="text-sm text-gray-600">({t('abortedGamesDescription')})</span>
-            </li>
-            <li className="pt-4">
-              <strong>{t('gamesFinished')}:</strong> {results ? totalPlayedGames : '---'}{' '}
-              <span className="text-sm text-gray-600">({t('gamesFinishedDescription')})</span>
-            </li>
-            <li>
-              <strong>{t('wins')}:</strong> {results ? results.wins : '---'}{' '}
-              <span className="text-sm text-gray-600">({t('winsDescription')})</span>
-            </li>
-            <li>
-              <strong>{t('losses')}:</strong> {results ? results.losses : '---'}{' '}
-              <span className="text-sm text-gray-600">({t('lossesDescription')})</span>
-            </li>
-            <li>
-              <strong>{t('winRate')}:</strong> {winRate}{' '}
-              <span className="text-sm text-gray-600">({t('winRateDescription')})</span>
-            </li>
-          </ul>
-        </section>
+        <ResultsSection results={results} progress={progress} isRunning={isRunning} />
       </div>
     </div>
   );
