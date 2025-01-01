@@ -3,6 +3,7 @@ import { useTranslation } from 'react-i18next';
 import WorkerManager from '../utils/WorkerManager';
 import ResultsSection from '../components/ResultsSection';
 import styles from './Home.module.css';
+import SimulationWorker from '../workers/simulationWorker.js?worker';
 
 const Home = () => {
   const { t } = useTranslation();
@@ -31,9 +32,7 @@ const Home = () => {
     // Store the last run parameters
     setLastRunParameters({ doors, playerBehavior, hostKnowledge, simulations });
 
-    workerManagerRef.current = new WorkerManager(
-      new URL('../workers/simulationWorker.js', import.meta.url)
-    );
+    workerManagerRef.current = new WorkerManager(new SimulationWorker());
 
     workerManagerRef.current.on('progress', (data) => {
       setProgress(data.progress);

@@ -1,6 +1,6 @@
 export default class WorkerManager {
-    constructor(workerUrl) {
-        this.worker = new Worker(workerUrl, { type: 'module' });
+    constructor(worker) {
+        this.worker = worker;
         this.listeners = {
             progress: [],
             complete: [],
