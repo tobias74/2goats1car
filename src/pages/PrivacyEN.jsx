@@ -5,6 +5,13 @@ const PrivacyEN = () => {
         <div className="privacy-container">
             <h4>Privacy Policy</h4>
 
+            <h4>This website is hosted on <a href="https://www.ionos.com/" target="_blank">IONOS (www.ionos.com)</a>.</h4>
+            <p>
+                Privacy policy of IONOS: <a target="_blank" href="https://www.ionos.com/terms-gtc/privacy-policy/">https://www.ionos.com/terms-gtc/privacy-policy/</a>
+            </p>
+
+            <br />
+
             <p>We are very delighted that you have shown interest in our enterprise. Data protection is of a particularly high priority for the management of the tobiga UG (haftungsbeschränkt). The use of the Internet pages of the tobiga UG (haftungsbeschränkt) is possible without any indication of personal data; however, if a data subject wants to use special enterprise services via our website, processing of personal data could become necessary. If the processing of personal data is necessary and there is no statutory basis for such processing, we generally obtain consent from the data subject.</p>
 
             <p>The processing of personal data, such as the name, address, e-mail address, or telephone number of a data subject shall always be in line with the General Data Protection Regulation (GDPR), and in accordance with the country-specific data protection regulations applicable to the tobiga UG (haftungsbeschränkt). By means of this data protection declaration, our enterprise would like to inform the general public of the nature, scope, and purpose of the personal data we collect, use and process. Furthermore, data subjects are informed, by means of this data protection declaration, of the rights to which they are entitled.</p>

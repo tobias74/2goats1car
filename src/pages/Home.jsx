@@ -1,6 +1,8 @@
-import React, { useState } from 'react';
+import React, { useState, useRef, useEffect } from 'react';
 import { useTranslation } from 'react-i18next';
-import { runMontyHallSimulation } from '../services/simulation';
+import WorkerManager from '../utils/WorkerManager';
+import ResultsSection from '../components/ResultsSection';
+import styles from './Home.module.css';
 
 const Home = () => {
   const { t } = useTranslation();
@@ -9,28 +11,83 @@ const Home = () => {
   const [playerBehavior, setPlayerBehavior] = useState('switch');
   const [hostKnowledge, setHostKnowledge] = useState('knows');
   const [simulations, setSimulations] = useState(100);
-  const [results, setResults] = useState(null);
+  const [results, setResults] = useState({
+    wins: 0,
+    losses: 0,
+    hostAbortedGames: 0,
+    totalSimulations: 0,
+  });
+  const [progress, setProgress] = useState(0);
+  const [isRunning, setIsRunning] = useState(false);
+  const [lastRunParameters, setLastRunParameters] = useState(null); // To track last used parameters
+
+  const workerManagerRef = useRef(null);
 
   const handleRunSimulation = () => {
-    const { wins, losses, hostAbortedGames, totalSimulations } = runMontyHallSimulation(
+    setIsRunning(true);
+    setProgress(0);
+    setResults({ wins: 0, losses: 0, hostAbortedGames: 0, totalSimulations: simulations });
+
+    // Store the last run parameters
+    setLastRunParameters({ doors, playerBehavior, hostKnowledge, simulations });
+
+    workerManagerRef.current = new WorkerManager(
+      new URL('../workers/simulationWorker.js', import.meta.url)
+    );
+
+    workerManagerRef.current.on('progress', (data) => {
+      setProgress(data.progress);
+      setResults((prevResults) => ({
+        ...prevResults,
+        ...data.partialResults,
+      }));
+    });
+
+    workerManagerRef.current.on('complete', () => {
+      setIsRunning(false);
+      workerManagerRef.current.terminate();
+      workerManagerRef.current = null;
+    });
+
+    workerManagerRef.current.on('error', (error) => {
+      console.error('Worker Error:', error);
+      setIsRunning(false);
+      workerManagerRef.current.terminate();
+      workerManagerRef.current = null;
+    });
+
+    workerManagerRef.current.postMessage({
       doors,
       playerBehavior,
       hostKnowledge,
-      simulations
-    );
-    setResults({ wins, losses, hostAbortedGames, totalSimulations });
+      simulations,
+    });
   };
 
-  const totalPlayedGames = results ? results.totalSimulations - results.hostAbortedGames : 0;
-  const winRate =
-    results && results.wins + results.losses > 0
-      ? ((results.wins / (results.wins + results.losses)) * 100).toFixed(2)
-      : '---';
+  const handleAbortSimulation = () => {
+    if (workerManagerRef.current) {
+      workerManagerRef.current.terminate();
+      workerManagerRef.current = null;
+      setIsRunning(false);
+    }
+  };
+
+  useEffect(() => {
+    return () => {
+      if (workerManagerRef.current) {
+        workerManagerRef.current.terminate();
+        workerManagerRef.current = null;
+      }
+    };
+  }, []);
 
   return (
-    <div className="p-6">
+    <div className={'p-6 ' + styles['home-wrapper']}>
       <div className="max-w-screen-lg mx-auto">
-        {/* Configuration Section */}
+        <section className="mb-14">
+          <p className="text-gray-700">{t('introText')}</p>
+        </section>
+
         <section className="mb-8">
           <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4">
             <div>
@@ -39,6 +96,7 @@ const Home = () => {
                 value={doors}
                 onChange={(e) => setDoors(Number(e.target.value))}
                 className="w-full p-2 border rounded"
+                disabled={isRunning}
               >
                 {[3, 4, 5, 6, 7, 8, 9, 10, 20, 30, 40, 50, 100].map((n) => (
                   <option key={n} value={n}>
@@ -53,6 +111,7 @@ const Home = () => {
                 value={playerBehavior}
                 onChange={(e) => setPlayerBehavior(e.target.value)}
                 className="w-full p-2 border rounded"
+                disabled={isRunning}
               >
                 <option value="switch">{t('switchDoors')}</option>
                 <option value="stay">{t('stay')}</option>
@@ -64,6 +123,7 @@ const Home = () => {
                 value={hostKnowledge}
                 onChange={(e) => setHostKnowledge(e.target.value)}
                 className="w-full p-2 border rounded"
+                disabled={isRunning}
               >
                 <option value="knows">{t('hostKnows')}</option>
                 <option value="random">{t('hostDoesNotKnow')}</option>
@@ -75,8 +135,9 @@ const Home = () => {
                 value={simulations}
                 onChange={(e) => setSimulations(Number(e.target.value))}
                 className="w-full p-2 border rounded"
+                disabled={isRunning}
               >
-                {[100, 500, 1000, 5000, 10000].map((n) => (
+                {[100, 500, 1000, 5000, 10000, 100000, 1000000, 10000000].map((n) => (
                   <option key={n} value={n}>
                     {n}
                   </option>
@@ -84,44 +145,28 @@ const Home = () => {
               </select>
             </div>
           </div>
-          <div className="flex justify-center mt-4">
-            <button
-              onClick={handleRunSimulation}
-              className="bg-teal-600 text-white px-6 py-3 rounded shadow hover:bg-teal-700 transition"
-            >
-              {t('runSimulation')}
-            </button>
+          <div className="flex justify-center mt-8">
+            {isRunning ? (
+              <button
+                onClick={handleAbortSimulation}
+                className="bg-red-600 text-white px-6 py-3 rounded shadow hover:bg-red-700 transition"
+              >
+                {progress.toFixed(2)} % ({t('abortSimulation')})
+              </button>
+            ) : (
+              <button
+                onClick={handleRunSimulation}
+                className="bg-teal-600 text-white px-6 py-3 rounded shadow hover:bg-teal-700 transition"
+              >
+                {t('runSimulation')}
+              </button>
+            )}
           </div>
         </section>
 
         {/* Results Section */}
-        <section className="flex justify-center mt-4">
-          <ul className="space-y-2">
-            <li>
-              <strong>{t('totalSimulations')}:</strong> {results ? results.totalSimulations : '---'}
-            </li>
-            <li>
-              <strong>{t('abortedGames')}:</strong> {results ? results.hostAbortedGames : '---'}{' '}
-              <span className="text-sm text-gray-600">({t('abortedGamesDescription')})</span>
-            </li>
-            <li className="pt-4">
-              <strong>{t('gamesFinished')}:</strong> {results ? totalPlayedGames : '---'}{' '}
-              <span className="text-sm text-gray-600">({t('gamesFinishedDescription')})</span>
-            </li>
-            <li>
-              <strong>{t('wins')}:</strong> {results ? results.wins : '---'}{' '}
-              <span className="text-sm text-gray-600">({t('winsDescription')})</span>
-            </li>
-            <li>
-              <strong>{t('losses')}:</strong> {results ? results.losses : '---'}{' '}
-              <span className="text-sm text-gray-600">({t('lossesDescription')})</span>
-            </li>
-            <li>
-              <strong>{t('winRate')}:</strong> {winRate}{' '}
-              <span className="text-sm text-gray-600">({t('winRateDescription')})</span>
-            </li>
-          </ul>
-        </section>
+        <ResultsSection results={results} progress={progress} isRunning={isRunning} lastRunParameters={lastRunParameters} />
+
       </div>
     </div>
   );
