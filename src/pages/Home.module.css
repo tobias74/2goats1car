@@ -1,0 +1,8 @@
+/* Scope styles to the Home component */
+.home-wrapper select:disabled {
+  background-color: #f9fafb; /* Light gray background */
+  color: #9ca3af; /* Gray text */
+  border-color: #d1d5db; /* Gray border */
+  cursor: not-allowed; /* Prevent hover or pointer */
+  opacity: 1; /* Ensure no additional dimming is applied */
+}

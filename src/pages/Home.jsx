@@ -1,7 +1,8 @@
-import React, { useState } from 'react';
+import React, { useState, useRef } from 'react';
 import { useTranslation } from 'react-i18next';
 import WorkerManager from '../utils/WorkerManager';
 import ResultsSection from '../components/ResultsSection';
+import styles from './Home.module.css';
 
 const Home = () => {
   const { t } = useTranslation();
@@ -14,32 +15,34 @@ const Home = () => {
   const [progress, setProgress] = useState(0);
   const [isRunning, setIsRunning] = useState(false);
 
-  let workerManager = null;
+  const workerManagerRef = useRef(null); // Persist the worker instance across re-renders
 
   const handleRunSimulation = () => {
     setIsRunning(true);
     setProgress(0);
     setResults(null);
 
-    workerManager = new WorkerManager(new URL('../workers/simulationWorker.js', import.meta.url));
+    workerManagerRef.current = new WorkerManager(new URL('../workers/simulationWorker.js', import.meta.url));
 
-    workerManager.on('progress', (data) => {
+    workerManagerRef.current.on('progress', (data) => {
       setProgress(data.progress);
     });
 
-    workerManager.on('complete', (data) => {
+    workerManagerRef.current.on('complete', (data) => {
       setResults(data);
       setIsRunning(false);
-      workerManager.terminate();
+      workerManagerRef.current.terminate();
+      workerManagerRef.current = null; // Clear the reference after completion
     });
 
-    workerManager.on('error', (error) => {
+    workerManagerRef.current.on('error', (error) => {
       console.error('Worker Error:', error);
       setIsRunning(false);
-      workerManager.terminate();
+      workerManagerRef.current.terminate();
+      workerManagerRef.current = null; // Clear the reference on error
     });
 
-    workerManager.postMessage({
+    workerManagerRef.current.postMessage({
       doors,
       playerBehavior,
       hostKnowledge,
@@ -47,13 +50,21 @@ const Home = () => {
     });
   };
 
+  const handleAbortSimulation = () => {
+    if (workerManagerRef.current) {
+      workerManagerRef.current.terminate();
+      workerManagerRef.current = null; // Clear the reference after termination
+      setIsRunning(false);
+      setProgress(0);
+      setResults(null);
+    }
+  };
+
   return (
-    <div className="p-6">
+    <div className={'p-6 ' + styles['home-wrapper']}>
       <div className="max-w-screen-lg mx-auto">
         <section className="mb-14">
-          <p className="text-gray-700">
-            {t('introText')}
-          </p>
+          <p className="text-gray-700">{t('introText')}</p>
         </section>
 
         <section className="mb-8">
@@ -64,6 +75,7 @@ const Home = () => {
                 value={doors}
                 onChange={(e) => setDoors(Number(e.target.value))}
                 className="w-full p-2 border rounded"
+                disabled={isRunning}
               >
                 {[3, 4, 5, 6, 7, 8, 9, 10, 20, 30, 40, 50, 100, 1000].map((n) => (
                   <option key={n} value={n}>
@@ -78,6 +90,7 @@ const Home = () => {
                 value={playerBehavior}
                 onChange={(e) => setPlayerBehavior(e.target.value)}
                 className="w-full p-2 border rounded"
+                disabled={isRunning}
               >
                 <option value="switch">{t('switchDoors')}</option>
                 <option value="stay">{t('stay')}</option>
@@ -89,6 +102,7 @@ const Home = () => {
                 value={hostKnowledge}
                 onChange={(e) => setHostKnowledge(e.target.value)}
                 className="w-full p-2 border rounded"
+                disabled={isRunning}
               >
                 <option value="knows">{t('hostKnows')}</option>
                 <option value="random">{t('hostDoesNotKnow')}</option>
@@ -100,6 +114,7 @@ const Home = () => {
                 value={simulations}
                 onChange={(e) => setSimulations(Number(e.target.value))}
                 className="w-full p-2 border rounded"
+                disabled={isRunning}
               >
                 {[100, 500, 1000, 5000, 10000, 100000, 1000000].map((n) => (
                   <option key={n} value={n}>
@@ -110,13 +125,21 @@ const Home = () => {
             </div>
           </div>
           <div className="flex justify-center mt-8">
-            <button
-              onClick={handleRunSimulation}
-              disabled={isRunning}
-              className="bg-teal-600 text-white px-6 py-3 rounded shadow hover:bg-teal-700 transition"
-            >
-              {isRunning ? `${t('runningSimulation')} (${progress.toFixed(0)}%)` : t('runSimulation')}
-            </button>
+            {isRunning ? (
+              <button
+                onClick={handleAbortSimulation}
+                className="bg-red-600 text-white px-6 py-3 rounded shadow hover:bg-red-700 transition"
+              >
+                {t('abortSimulation')} ({progress.toFixed(0)}%)
+              </button>
+            ) : (
+              <button
+                onClick={handleRunSimulation}
+                className="bg-teal-600 text-white px-6 py-3 rounded shadow hover:bg-teal-700 transition"
+              >
+                {t('runSimulation')}
+              </button>
+            )}
           </div>
         </section>
 
