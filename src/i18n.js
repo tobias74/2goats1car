@@ -27,6 +27,7 @@ const resources = {
             winRateDescription: 'Percentage of games won',
             imprint: 'Imprint',
             privacy: 'Privacy Policy',
+            abortSimulation: 'Click to abort',
         },
     },
     de: {
@@ -54,6 +55,7 @@ const resources = {
             winRateDescription: 'Prozentsatz der gewonnenen Spiele',
             imprint: 'Impressum',
             privacy: 'Datenschutzerklärung',
+            abortSimulation: 'Zum Abbrechen klicken',
         },
     },
 };

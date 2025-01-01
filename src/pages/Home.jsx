@@ -11,7 +11,12 @@ const Home = () => {
   const [playerBehavior, setPlayerBehavior] = useState('switch');
   const [hostKnowledge, setHostKnowledge] = useState('knows');
   const [simulations, setSimulations] = useState(100);
-  const [results, setResults] = useState(null);
+  const [results, setResults] = useState({
+    wins: 0,
+    losses: 0,
+    hostAbortedGames: 0,
+    totalSimulations: 0,
+  });
   const [progress, setProgress] = useState(0);
   const [isRunning, setIsRunning] = useState(false);
 
@@ -20,16 +25,21 @@ const Home = () => {
   const handleRunSimulation = () => {
     setIsRunning(true);
     setProgress(0);
-    setResults(null);
+    setResults({ wins: 0, losses: 0, hostAbortedGames: 0, totalSimulations: simulations });
 
-    workerManagerRef.current = new WorkerManager(new URL('../workers/simulationWorker.js', import.meta.url));
+    workerManagerRef.current = new WorkerManager(
+      new URL('../workers/simulationWorker.js', import.meta.url)
+    );
 
     workerManagerRef.current.on('progress', (data) => {
       setProgress(data.progress);
+      setResults((prevResults) => ({
+        ...prevResults,
+        ...data.partialResults,
+      }));
     });
 
-    workerManagerRef.current.on('complete', (data) => {
-      setResults(data);
+    workerManagerRef.current.on('complete', () => {
       setIsRunning(false);
       workerManagerRef.current.terminate();
       workerManagerRef.current = null; // Clear the reference after completion
@@ -55,8 +65,6 @@ const Home = () => {
       workerManagerRef.current.terminate();
       workerManagerRef.current = null; // Clear the reference after termination
       setIsRunning(false);
-      setProgress(0);
-      setResults(null);
     }
   };
 
@@ -130,7 +138,7 @@ const Home = () => {
                 onClick={handleAbortSimulation}
                 className="bg-red-600 text-white px-6 py-3 rounded shadow hover:bg-red-700 transition"
               >
-                {t('abortSimulation')} ({progress.toFixed(0)}%)
+                {progress.toFixed(2)} % ({t('abortSimulation')})
               </button>
             ) : (
               <button

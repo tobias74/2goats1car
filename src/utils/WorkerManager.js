@@ -1,6 +1,6 @@
 export default class WorkerManager {
     constructor(workerUrl) {
-        this.worker = new Worker(workerUrl, { type: 'module' }); // Add `type: 'module'`
+        this.worker = new Worker(workerUrl, { type: 'module' });
         this.listeners = {
             progress: [],
             complete: [],
@@ -17,7 +17,9 @@ export default class WorkerManager {
 
         // Handle errors from the worker
         this.worker.onerror = (error) => {
-            this.listeners.error.forEach((callback) => callback(error));
+            if (this.listeners.error) {
+                this.listeners.error.forEach((callback) => callback(error));
+            }
         };
     }
 

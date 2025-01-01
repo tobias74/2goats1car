@@ -4,7 +4,10 @@ import { useTranslation } from 'react-i18next';
 const ResultsSection = ({ results, progress, isRunning }) => {
     const { t } = useTranslation();
 
-    const totalPlayedGames = results ? results.totalSimulations - results.hostAbortedGames : 0;
+    // Calculate the total simulations based on progress
+    const totalSimulations = results.completedSimulations ?? 0;
+
+    const totalPlayedGames = results ? totalSimulations - results.hostAbortedGames : 0;
     const winRate =
         results && results.wins + results.losses > 0
             ? ((results.wins / (results.wins + results.losses)) * 100).toFixed(2)
@@ -14,7 +17,7 @@ const ResultsSection = ({ results, progress, isRunning }) => {
         <section className="flex justify-center mt-4">
             <ul className="space-y-2">
                 <li>
-                    <strong>{t('totalSimulations')}:</strong> {results ? results.totalSimulations : '---'}
+                    <strong>{t('totalSimulations')}:</strong> {totalSimulations}
                 </li>
                 <li>
                     <strong>{t('abortedGames')}:</strong> {results ? results.hostAbortedGames : '---'}{' '}
