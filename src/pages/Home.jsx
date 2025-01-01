@@ -60,6 +60,13 @@ const Home = () => {
   return (
     <div className="p-6">
       <div className="max-w-screen-lg mx-auto">
+        {/* Intro Section */}
+        <section className="mb-14">
+          <p className=" text-gray-700">
+            {t('introText')}
+          </p>
+        </section>
+
         {/* Configuration Section */}
         <section className="mb-8">
           <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4">
@@ -70,7 +77,7 @@ const Home = () => {
                 onChange={(e) => setDoors(Number(e.target.value))}
                 className="w-full p-2 border rounded"
               >
-                {[3, 4, 5, 6, 7, 8, 9, 10, 20, 30, 40, 50, 100].map((n) => (
+                {[3, 4, 5, 6, 7, 8, 9, 10, 20, 30, 40, 50, 100, 1000].map((n) => (
                   <option key={n} value={n}>
                     {n}
                   </option>
@@ -114,7 +121,7 @@ const Home = () => {
               </select>
             </div>
           </div>
-          <div className="flex justify-center mt-4">
+          <div className="flex justify-center mt-8">
             <button
               onClick={handleRunSimulation}
               disabled={isRunning}

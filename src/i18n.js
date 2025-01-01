@@ -4,6 +4,7 @@ import { initReactI18next } from 'react-i18next';
 const resources = {
     en: {
         translation: {
+            introText: 'The "Monty Hall problem" is a probability puzzle based on the American television game show "Let\'s Make a Deal" and its original host, Monty Hall. This project simulates the mathematical scenario inspired by the game.',
             numberOfDoors: 'Number of Doors',
             playerBehavior: 'Player Behavior',
             switchDoors: 'Switch Doors',
@@ -30,6 +31,7 @@ const resources = {
     },
     de: {
         translation: {
+            introText: 'Das "Monty Hall-Problem" ist ein Wahrscheinlichkeitsrätsel, das auf der amerikanischen Fernsehshow "Let\'s Make a Deal" und ihrem ursprünglichen Moderator Monty Hall basiert. Dieses Projekt simuliert das mathematische Szenario, das von dem Spiel inspiriert wurde.',
             numberOfDoors: 'Anzahl der Türen',
             playerBehavior: 'Spielerverhalten',
             switchDoors: 'Wechseln',
