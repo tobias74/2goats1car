@@ -69,7 +69,7 @@ const resources = {
             switch: 'Wechseln',
             knows: 'Weiß Bescheid',
             random: 'Weiß nicht Bescheid',
-            "introTextHostKnowledge": "Dieser Test untersucht das Wissen des Gastgebers, indem die Gewinnrate analysiert wird, die mit einer festgelegten Spielstrategie erzielt wird. Die Simulation beginnt nach der anfänglichen zufälligen Türwahl, zu dem Zeitpunkt, an dem der Gastgeber den Spieler auffordert, bei der aktuellen Wahl zu bleiben oder zu wechseln. Durch den Vergleich der beobachteten Gewinnrate mit den theoretisch erwarteten Wahrscheinlichkeiten für einen informierten versus einen uninformierten Gastgeber können Sie ableiten, ob der Gastgeber den Standort des Gewinns kennt.",
+            "introTextHostKnowledge": "Dieser Test untersucht, ob der Gastgeber über Vorwissen verfügt. Zunächst erfolgt eine zufällige Türwahl. Anschließend wird der Spieler in das Spiel einbezogen, um zu entscheiden, ob an der initialen Wahl festgehalten oder gewechselt wird. Die Simulation vergleicht die erzielte Gewinnrate mit den theoretisch erwarteten Werten für einen informierten bzw. uninformierten Gastgeber. Damit kann überprüft werden, ob der Gastgeber den Standort des Gewinns kennt.",
             hostKnowsResult: 'Der Gastgeber weiß Bescheid',
             hostDoesNotKnowResult: 'Der Gastgeber weiß nicht Bescheid',
             "host-test": "Host Test",

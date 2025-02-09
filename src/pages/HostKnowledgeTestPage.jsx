@@ -86,7 +86,7 @@ const HostKnowledgeTestPage = () => {
         const usedDoors = lastRunParameters.doors;
         const winRate = results.wins / validGames;
         const expectedKnows = 1 / usedDoors;
-        const expectedRandom = 1 / (usedDoors - 1);
+        const expectedRandom = 0.5;
         const diffKnows = Math.abs(winRate - expectedKnows);
         const diffRandom = Math.abs(winRate - expectedRandom);
         hostIsKnowledgeable = diffKnows < diffRandom;
@@ -166,10 +166,10 @@ const HostKnowledgeTestPage = () => {
                     {/* New Test Result Section */}
                     <div
                         className={`text-center text-3xl font-bold mt-4 ${hostIsKnowledgeable === true
-                                ? 'text-green-600'
-                                : hostIsKnowledgeable === false
-                                    ? 'text-red-600'
-                                    : ''
+                            ? 'text-green-600'
+                            : hostIsKnowledgeable === false
+                                ? 'text-red-600'
+                                : ''
                             }`}
                     >
                         {hostIsKnowledgeable === true
