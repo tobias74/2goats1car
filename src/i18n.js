@@ -32,6 +32,11 @@ const resources = {
             switch: 'Switch',
             knows: 'Knows',
             random: 'Does not know',
+            "introTextHostKnowledge": "This test examines the host's knowledge by analyzing the win rate achieved with a fixed playing strategy. The simulation starts after the initial random door selection, at the point when the host prompts the player to either stay with their current choice or switch. By comparing the observed win rate with the theoretical probabilities expected for an informed versus an uninformed host, you can deduce whether the host possesses knowledge of the prize location.",
+            hostKnowsResult: 'The Host knows',
+            hostDoesNotKnowResult: 'The Host does not know',
+            "host-test": "Host Test",
+
         },
     },
     de: {
@@ -64,6 +69,10 @@ const resources = {
             switch: 'Wechseln',
             knows: 'Weiß Bescheid',
             random: 'Weiß nicht Bescheid',
+            "introTextHostKnowledge": "Dieser Test untersucht das Wissen des Gastgebers, indem die Gewinnrate analysiert wird, die mit einer festgelegten Spielstrategie erzielt wird. Die Simulation beginnt nach der anfänglichen zufälligen Türwahl, zu dem Zeitpunkt, an dem der Gastgeber den Spieler auffordert, bei der aktuellen Wahl zu bleiben oder zu wechseln. Durch den Vergleich der beobachteten Gewinnrate mit den theoretisch erwarteten Wahrscheinlichkeiten für einen informierten versus einen uninformierten Gastgeber können Sie ableiten, ob der Gastgeber den Standort des Gewinns kennt.",
+            hostKnowsResult: 'Der Gastgeber weiß Bescheid',
+            hostDoesNotKnowResult: 'Der Gastgeber weiß nicht Bescheid',
+            "host-test": "Host Test",
         },
     },
 };

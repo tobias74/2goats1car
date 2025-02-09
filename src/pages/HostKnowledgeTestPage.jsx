@@ -9,7 +9,6 @@ const HostKnowledgeTestPage = () => {
     const { t } = useTranslation();
 
     const [doors, setDoors] = useState(3);
-    // Player behavior is fixed to 'stay' so we remove that option.
     const [hostKnowledge, setHostKnowledge] = useState('knows');
     const [simulations, setSimulations] = useState(100);
     const [results, setResults] = useState({
@@ -30,7 +29,7 @@ const HostKnowledgeTestPage = () => {
         setResults({ wins: 0, losses: 0, hostAbortedGames: 0, totalSimulations: simulations });
 
         // Store the last run parameters (playerBehavior is fixed to 'stay')
-        setLastRunParameters({ doors, hostKnowledge, simulations });
+        setLastRunParameters({ doors, hostKnowledge, simulations, playerBehavior: 'stay' });
 
         workerManagerRef.current = new WorkerManager(new SimulationWorker());
 
@@ -80,12 +79,25 @@ const HostKnowledgeTestPage = () => {
         };
     }, []);
 
+    // Use lastRunParameters.doors to ensure the calculation only uses the parameters from the completed simulation.
+    let hostIsKnowledgeable = null;
+    const validGames = results.wins + results.losses;
+    if (!isRunning && validGames > 0 && lastRunParameters) {
+        const usedDoors = lastRunParameters.doors;
+        const winRate = results.wins / validGames;
+        const expectedKnows = 1 / usedDoors;
+        const expectedRandom = 1 / (usedDoors - 1);
+        const diffKnows = Math.abs(winRate - expectedKnows);
+        const diffRandom = Math.abs(winRate - expectedRandom);
+        hostIsKnowledgeable = diffKnows < diffRandom;
+    }
+
     return (
         <div className={'p-6 ' + styles['home-wrapper']}>
             <div className="max-w-screen-lg mx-auto">
                 <section className="mb-14">
                     <p className="text-gray-700">
-                        {t('introText')} {t('hostKnowledgeTestDescription')}
+                        {t('introTextHostKnowledge')}
                     </p>
                 </section>
 
@@ -150,6 +162,21 @@ const HostKnowledgeTestPage = () => {
                                 {t('runSimulation')}
                             </button>
                         )}
+                    </div>
+                    {/* New Test Result Section */}
+                    <div
+                        className={`text-center text-3xl font-bold mt-4 ${hostIsKnowledgeable === true
+                                ? 'text-green-600'
+                                : hostIsKnowledgeable === false
+                                    ? 'text-red-600'
+                                    : ''
+                            }`}
+                    >
+                        {hostIsKnowledgeable === true
+                            ? t('hostKnowsResult')
+                            : hostIsKnowledgeable === false
+                                ? t('hostDoesNotKnowResult')
+                                : '---'}
                     </div>
                 </section>
 
