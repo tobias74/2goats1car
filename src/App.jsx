@@ -7,6 +7,7 @@ import Navbar from './components/Navbar';
 import Footer from './components/Footer'; // Import Footer component
 import Imprint from './pages/Imprint';
 import Privacy from './pages/Privacy';
+import HostKnowledgeTestPage from './pages/HostKnowledgeTestPage';
 
 const App = () => {
   const { i18n } = useTranslation();
@@ -24,6 +25,7 @@ const App = () => {
       <main className="flex-grow container mx-auto py-8">
         <Routes>
           <Route path="/" element={<Home />} />
+          <Route path="/host-test" element={<HostKnowledgeTestPage />} />
           <Route path="/imprint" element={<Imprint />} />
           <Route path="/privacy" element={<Privacy />} />
         </Routes>

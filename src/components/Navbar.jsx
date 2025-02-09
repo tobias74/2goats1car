@@ -73,6 +73,9 @@ const Navbar = ({ switchLanguage }) => {
 
           {/* Desktop Navigation (center) */}
           <nav className="flex-1 flex justify-center items-center space-x-8">
+            <Link to="/host-test" className="hover:text-teal-200 transition-colors">
+              {t('host-test')}
+            </Link>
             <Link to="/privacy" className="hover:text-teal-200 transition-colors">
               {t('privacy')}
             </Link>
@@ -138,6 +141,13 @@ const Navbar = ({ switchLanguage }) => {
           `}
         >
           <div className="flex flex-col items-start p-4 space-y-4 mt-10">
+            <Link
+              to="/host-test"
+              className="hover:text-teal-200 transition-colors"
+              onClick={() => setIsOpen(false)}
+            >
+              {t('host-test')}
+            </Link>
             <Link
               to="/privacy"
               className="hover:text-teal-200 transition-colors"
