@@ -1,3 +1,6 @@
+### Written by AI
+This text was written by an AI, I do not understand half of it. I only had the idea. 
+
 # Does Monty Know?
 
 ### Detecting the host's knowledge in the Monty Hall game — a study in survivorship bias
