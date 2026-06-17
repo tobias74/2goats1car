@@ -83,11 +83,11 @@ The switch statements follow because in every aired game exactly one closed alte
 
 ### 2.4 Proposition 3 — anatomy of the censoring
 
-*Under $I$:*
+*Under $`I`$:*
 
-1. *$\Pr(S) = \tfrac23$: one third of all tapings are discarded.*
-2. *$\{H = C\} \subseteq \{C \ne P\}$: **every discarded taping is a stay-loss** (the host cannot open the reserved door, so he can only reveal a car that is not behind it).*
-3. *Across **all** tapings, aired or not, the stay-win rate is exactly $\tfrac13$. The lift from $\tfrac13$ to $\tfrac12$ on aired games is produced entirely by selective deletion of losses — no probability is created, only hidden.*
+1. *$`\Pr(S) = \tfrac{2}{3}`$: one third of all tapings are discarded.*
+2. *$`\{H = C\} \subseteq \{C \ne P\}`$: **every discarded taping is a stay-loss** (the host cannot open the reserved door, so he can only reveal a car that is not behind it).*
+3. *Across **all** tapings, aired or not, the stay-win rate is exactly $`\tfrac{1}{3}`$. The lift from $`\tfrac{1}{3}`$ to $`\tfrac{1}{2}`$ on aired games is produced entirely by selective deletion of losses — no probability is created, only hidden.*
 
 In expected counts, for 1500 tapings:
 
