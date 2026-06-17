@@ -63,7 +63,7 @@ Since aired games are i.i.d. under both hypotheses, the entire *sequence of scen
 
 ### 2.3 Proposition 2 — win rates in aired games
 
-*Stay wins an aired game with probability $\tfrac13$ under $K$ and $\tfrac12$ under $I$. (Equivalently, switch wins with probability $\tfrac23$ under $K$ and $\tfrac12$ under $I$.)*
+Stay wins an aired game with probability $\tfrac{1}{3}$ under $K$ and $\tfrac{1}{2}$ under $I$. (Equivalently, switch wins with probability $\tfrac{2}{3}$ under $K$ and $\tfrac{1}{2}$ under $I$.)
 
 **Proof.** Under $K$ every taping airs, so the aired stay-win probability is the unconditional one: $\Pr(C=P) = \tfrac13$. Under $I$, note first that the host can hit the car only when the car is not behind the reserved door, and then with probability $\tfrac12$:
 
