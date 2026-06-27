@@ -1,0 +1,16 @@
+RewriteEngine On
+RewriteBase /
+
+# Redirect non-canonical hosts to the canonical HTTPS origin.
+RewriteCond %{HTTP_HOST} !^2goats1car\.com$ [NC]
+RewriteRule ^ https://2goats1car.com%{REQUEST_URI} [R=301,L]
+
+# Redirect HTTP requests to HTTPS before applying the SPA fallback.
+RewriteCond %{HTTPS} !=on
+RewriteCond %{HTTP:X-Forwarded-Proto} !^https$ [NC]
+RewriteRule ^ https://2goats1car.com%{REQUEST_URI} [R=301,L]
+
+# If the requested file or directory does not exist, serve index.html.
+RewriteCond %{REQUEST_FILENAME} !-f
+RewriteCond %{REQUEST_FILENAME} !-d
+RewriteRule . /index.html [L]
