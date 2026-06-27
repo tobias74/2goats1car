@@ -34,19 +34,7 @@ jobs:
           username: ${{ secrets.SFTP_USERNAME }}
           server: access978123064.webspace-data.io
           port: 22
-          local_path: dist/* # Deploy only the React app's build output
-          remote_path: /
-          sftp_only: true
-          password: ${{ secrets.SFTP_PASSWORD }} # Use secrets for authentication
-
-      # Step 6: Deploy hidden Apache config explicitly because dist/* excludes dotfiles
-      - name: Deploy .htaccess via SFTP
-        uses: wlixcc/SFTP-Deploy-Action@v1.2.4
-        with:
-          username: ${{ secrets.SFTP_USERNAME }}
-          server: access978123064.webspace-data.io
-          port: 22
-          local_path: dist/.htaccess
+          local_path: dist/. # Deploy the build output, including dotfiles like .htaccess
           remote_path: /
           sftp_only: true
           password: ${{ secrets.SFTP_PASSWORD }} # Use secrets for authentication
